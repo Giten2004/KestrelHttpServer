@@ -299,8 +299,10 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http
         protected FrameResponseHeaders FrameResponseHeaders { get; } = new FrameResponseHeaders();
 
         public TimeSpan RequestBodyTimeout { get; set; }
-        public TimeSpan? RequestBodyExtendedTimeout { get; set; }
-        public double? RequestBodyMinimumDataRate { get; set; }
+
+        public double RequestBodyMinimumDataRate { get; set; }
+
+        public TimeSpan RequestBodyMinimumDataRateGracePeriod { get; set; }
 
         public void InitializeStreams(MessageBody messageBody)
         {
@@ -380,8 +382,8 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http
             _requestCount++;
 
             RequestBodyTimeout = ServerOptions.Limits.DefaultRequestBodyTimeout;
-            RequestBodyExtendedTimeout = ServerOptions.Limits.DefaultRequestBodyExtendedTimeout;
-            RequestBodyMinimumDataRate = ServerOptions.Limits.DefaultRequestBodyMinimumDataRate;
+            RequestBodyMinimumDataRate = ServerOptions.Limits.DefaultRequestBodyMinimumDataRate ?? 0;
+            RequestBodyMinimumDataRateGracePeriod = ServerOptions.Limits.DefaultRequestBodyMinimumDataRateGracePeriod ?? TimeSpan.MaxValue;
         }
 
         /// <summary>
